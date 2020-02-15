@@ -1,3 +1,28 @@
+job_env*
+*.sqlite3
+
+flask_session/*
+
+*DS_store
+
+# ignore cahces
+cache*
+
+# ignore passwords and API keys
+.secret.json
+
+# ignore all vscode config files
+.vscode*
+
+# ignore all pickles
+*.pkl
+
+# ignore all Untitled documents (mostly for .ipynb's)
+Untitled*
+
+# Ignore all data
+misc_notebooks/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
