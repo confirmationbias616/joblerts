@@ -20,7 +20,7 @@ def find_postings(entry, keyword):
     response = get_link_response(entry)
     html = response.content
     entry_soup = BeautifulSoup(html, "html.parser")
-    postings = [posting.get('href') for posting in entry_soup.find_all("a") if keyword in posting.get_text()]
+    postings = {posting.get('href'): posting.get_text() for posting in entry_soup.find_all("a") if keyword in posting.get_text().lower()}
     return postings
 
 @lru_cache()
@@ -40,13 +40,15 @@ def vet_link(link):
 
 @lru_cache()
 def get_posting_links(entry, keyword):
-    posting_links = find_postings(entry, keyword)
-    full_links = []
+    keywrod = keyword.lower()
+    postings = find_postings(entry, keyword)
+    posting_links = postings.keys()
+    results = []
     for posting_link in posting_links:
         full_link = vet_link(posting_link)
         if full_link:
             if full_link != 'not_job_link':
-                full_links.append(full_link)
+                results.append((full_link, postings[posting_link]))
             continue
         link_with_params = re.findall('.*(?=\?)', entry)
         search_base_link = link_with_params[0] if link_with_params else entry
@@ -54,7 +56,7 @@ def get_posting_links(entry, keyword):
         full_link = vet_link(full_link)
         if full_link:
             if full_link != 'not_job_link':
-                full_links.append(full_link)
+                results.append((full_link, postings[posting_link]))
             continue
         try:
             parent_link = re.findall('.*(?=/)', search_base_link)[0]
@@ -64,7 +66,7 @@ def get_posting_links(entry, keyword):
             pass
         if full_link:
             if full_link != 'not_job_link':
-                full_links.append(full_link)
+                results.append((full_link, postings[posting_link]))
             continue
         try:
             parent_link_2 = re.findall('.*(?=/)', parent_link)[0]
@@ -74,6 +76,6 @@ def get_posting_links(entry, keyword):
             pass
         if full_link:
             if full_link != 'not_job_link':
-                full_links.append(full_link)
+                results.append((full_link, postings[posting_link]))
             continue
-    return full_links
+    return results
