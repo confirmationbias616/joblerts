@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from time import sleep
 from functools import lru_cache
+import argparse
 
 
 @lru_cache()
@@ -79,3 +80,20 @@ def get_posting_links(entry, keyword):
                 results.append((full_link, postings[posting_link]))
             continue
     return results
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-e",
+        "--entry",
+        type=str,
+    )
+    parser.add_argument(
+        "-k",
+        "--keyword",
+        type=str,
+    )
+    args = parser.parse_args()
+    entry = args.entry
+    keyword = args.keyword
+    print(get_posting_links(entry, keyword))
