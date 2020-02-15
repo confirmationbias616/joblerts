@@ -15,7 +15,8 @@ class TestWrangleFuncs(unittest.TestCase):
     )
     @unpack
     def test_get_posting_links(self, entry, keyword, desired_link, desired_links_count):
-        found_links = get_posting_links(entry, keyword)
+        results = (get_posting_links(entry, keyword))
+        found_links = [x[0] for x in results]
         self.assertTrue(desired_link in found_links)
         self.assertEqual(desired_links_count, len(found_links))
 
