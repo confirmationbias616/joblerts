@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  {% extends 'base.html' %}
+  {% block head %}
+  {% endblock %}
+</head>
+<body>
+    {% block body %}
+    <br><br>    
+    <div>
+      <h1 class='blocktext'>This is the mega cool landing page</h1>
+    </div>
+    {% if session.get('user_name') %}
+    <div class='blocktext'>
+      <form action="/search_entry" name = "search_entry" method="POST" onsubmit="return(validate())">
+        <input type="text" name="career_page" size="26" placeholder="https://www.SomeCoolCompany/careers/" required style="margin-bottom: 10px; margin-right: 10px;">
+        <input type="text" name="keywords" size="26" placeholder="Data Scientist" required style="margin-bottom: 10px; margin-right: 10px;">
+        <input type="submit" id="small_button" value="SUBMIT">
+      </form>
+    </div>
+    {% endif %}
+    <br><br>
+    {% endblock %}
+</body>
+</html>
