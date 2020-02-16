@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <title>Joblert</title>
+    <title>joblert.me</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="{{ url_for('static',filename='style.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -25,7 +25,7 @@
         <a href="javascript:void(0);" class="icon" onclick="myFunction()">
             <i class="fa fa-bars"></i>
         </a>
-        <a class="title" href={{ url_for('index') }}><strong>Joblert</strong></a>
+        <a class="title" href={{ url_for('index') }}><strong>joblert.me</strong></a>
         {% if session.get("user_id") %}
         <a href={{ url_for('logout') }}><i>log out</i></a>
         {% else %}
