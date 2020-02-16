@@ -12,14 +12,25 @@
     <div>
       <h1 class='blocktext'>Because Google Job Alerts suck big dicks</h1>
     </div>
+    <br>
     {% if session.get('user_name') %}
     <div class='blocktext'>
+      <span style="font-size: 115%;">Enter a career page url and search keyword below:</span><br><br>
       <form action="/search_entry" name = "search_entry" method="POST" onsubmit="return(validate())">
         <input type="text" name="career_page" size="26" placeholder="https://www.SomeCoolCompany/careers/" required style="margin-bottom: 10px; margin-right: 10px;">
         <input type="text" name="keywords" size="26" placeholder="Data Scientist" required style="margin-bottom: 10px; margin-right: 10px;">
         <input type="submit" id="small_button" value="SUBMIT">
       </form>
     </div>
+      {% if not search_table.empty %}
+      <hr style="border: 1px solid var(--highlight);">
+      <br>
+      <div class='blocktext'>
+        {% for _, search in search_table.iterrows() %}
+        <a href="{{search.action}}">x</a>   {{ search.keywords }} - {{ search.career_page}}<br><br>
+        {% endfor %}
+      </div>
+      {% endif %}
     {% endif %}
     <br><br>
     {% endblock %}

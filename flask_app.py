@@ -116,10 +116,51 @@ def load_user():
     else:  # for for dev and prod servers
         session['user_id'] = None
 
+def load_search_table(user_id):
+    fetch_searches_query = """
+        SELECT * FROM search
+        WHERE user_id = ?
+    """
+    with create_connection() as conn:
+        search_table = pd.read_sql(fetch_searches_query, conn, params=[user_id])    
+    return search_table
+
 @app.route("/", methods=["POST", "GET"])
 def index():
     load_user()
-    return render_template('landing_page.html')
+    search_table = load_search_table(session['user_id'])
+    if len(search_table):
+        search_table["action"] = search_table.apply(
+            lambda row: (
+                f"{url_for('delete_search', id=row.id)}"
+            ),
+            axis=1,
+        )
+        search_table_html = (search_table
+            .style.set_table_styles(
+                [
+                    {
+                        "selector": "th",
+                        "props": [
+                            ("background-color", "rgb(122, 128, 138)"),
+                            ("color", "black"),
+                        ],
+                    }
+                ]
+            )
+            .set_table_attributes('border="1"')
+            .set_properties(
+                **{"font-size": "10pt", "background-color": "rgb(168, 185, 191)"}
+            )
+            .set_properties(
+                subset=["action"], **{"text-align": "center"}
+            )
+            .hide_index()
+        )
+        search_table_html = search_table_html.render(escape=False)
+    else:
+        search_table_html = None
+    return render_template('landing_page.html', search_table=search_table, search_table_html=search_table_html)
 
 @app.route("/login")
 def login():
@@ -206,168 +247,17 @@ def logout():
     session.clear()
     return redirect(url_for("index"))
 
-# Keeping here for later...
-# @app.route("/summary_table")
-# def summary_table():
-#     load_user()
-#     if session.get('account_type') != "full":
-#         return redirect(url_for("payment"))
-#     def highlight_pending(s):
-#         days_old = (
-#             datetime.datetime.now().date()
-#             - parse_date(re.findall("\d{4}-\d{2}-\d{2}", s.pub_date)[0]).date()
-#         ).days
-#         if days_old < 60:  # fresh - within lien period
-#             row_colour = "rgb(97, 62, 143)"
-#         else:
-#             row_colour = ""
-#         return [f"color: {row_colour}" for i in range(len(s))]
-#     col_order = [
-#         "job_number",
-#         "title",
-#         "contractor",
-#         "engineer",
-#         "owner",
-#         "address",
-#         "city",
-#     ]
-#     closed_query = """
-#             SELECT
-#                 company_projects.project_id,
-#                 company_projects.job_number,
-#                 company_projects.city,
-#                 company_projects.address,
-#                 company_projects.title,
-#                 company_projects.owner,
-#                 company_projects.contractor,
-#                 company_projects.engineer,
-#                 web.url_key,
-#                 web.pub_date,
-#                 (base_urls.base_url || web.url_key) AS link
-#             FROM (SELECT * FROM web_certificates ORDER BY cert_id DESC LIMIT 16000) as web
-#             LEFT JOIN
-#                 attempted_matches
-#             ON
-#                 web.cert_id = attempted_matches.cert_id
-#             LEFT JOIN
-#                 company_projects
-#             ON
-#                 attempted_matches.project_id = company_projects.project_id
-#             LEFT JOIN
-#                 base_urls
-#             ON
-#                 base_urls.source = web.source
-#             WHERE
-#                 company_projects.closed=1
-#             AND
-#                 user_id=?
-#             AND
-#                 attempted_matches.ground_truth=1
-#         """
-#     open_query = """
-#             SELECT *
-#             FROM company_projects
-#             WHERE company_projects.closed=0
-#             AND user_id=?
-#         """
-#     with create_connection() as conn:
-#         df_closed = pd.read_sql(closed_query, conn, params=[session.get('user_id')]).sort_values(
-#             "job_number", ascending=False
-#         )
-#         df_open = pd.read_sql(open_query, conn, params=[session.get('user_id')]).sort_values(
-#             "job_number", ascending=False
-#         )
-#     pd.set_option("display.max_colwidth", -1)
-#     if not len(df_closed):
-#         df_closed = None
-#     else:
-#         df_closed["job_number"] = df_closed.apply(
-#             lambda row: f"""<a href="{row.link}">{row.job_number}</a>""", axis=1
-#         )
-#         df_closed = df_closed.drop("url_key", axis=1)
-#         df_closed = (
-#             df_closed[["pub_date"] + col_order]
-#             .style.set_table_styles(
-#                 [
-#                     {
-#                         "selector": "th",
-#                         "props": [
-#                             ("background-color", "rgb(122, 128, 138)"),
-#                             ("color", "black"),
-#                         ],
-#                     }
-#                 ]
-#             )
-#             .set_table_attributes('border="1"')
-#             .set_properties(
-#                 **{"font-size": "10pt", "background-color": "rgb(168, 185, 191)"}
-#             )
-#             .set_properties(subset=["action", "job_number"], **{"text-align": "center"})
-#             .hide_index()
-#             .apply(highlight_pending, axis=1)
-#         )
-#         df_closed = df_closed.render(escape=False)
-#     if not len(df_open):
-#         df_open = None
-#     else:
-#         df_open["action"] = df_open.apply(
-#             lambda row: (
-#                 f"""<a href="{url_for('project_entry', **row)}">modify</a> / """
-#                 f"""<a href="{url_for('delete_job', project_id=row.project_id)}">delete</a>"""
-#             ),
-#             axis=1,
-#         )
-#         df_open["contacts"] = df_open.apply(
-#             lambda row: ", ".join(ast.literal_eval(row.receiver_emails_dump).keys()),
-#             axis=1,
-#         )
-#         df_open = (
-#             df_open[["action"] + col_order + ["contacts"]]
-#             .style.set_table_styles(
-#                 [
-#                     {
-#                         "selector": "th",
-#                         "props": [
-#                             ("background-color", "rgb(122, 128, 138)"),
-#                             ("color", "black"),
-#                         ],
-#                     }
-#                 ]
-#             )
-#             .set_table_attributes('border="1"')
-#             .set_properties(
-#                 **{"font-size": "10pt", "background-color": "rgb(168, 185, 191)"}
-#             )
-#             .set_properties(
-#                 subset=["action", "job_number", "contacts"], **{"text-align": "center"}
-#             )
-#             .hide_index()
-#         )
-#         df_open = df_open.render(escape=False)
-#     return render_template(
-#         "summary_table.html",
-#         df_closed=df_closed,
-#         df_open=df_open,
-#     )
 
-
-# @app.route("/delete_job")
-# def delete_job():
-#     if session.get('account_type') != "full":
-#         return redirect(url_for("payment"))
-#     delete_job_query = """
-#             DELETE FROM company_projects
-#             WHERE project_id=?
-#         """
-#     delete_match_query = """
-#             DELETE FROM attempted_matches
-#             WHERE project_id=?
-#         """
-#     project_id = request.args.get("project_id")
-#     with create_connection() as conn:
-#         conn.cursor().execute(delete_job_query, [project_id])
-#         conn.cursor().execute(delete_match_query, [project_id])
-#     return redirect(url_for("summary_table"))
+@app.route("/delete_search")
+def delete_search():
+    delete_search_query = """
+            DELETE FROM search
+            WHERE id=?
+        """
+    id = request.args.get("id")
+    with create_connection() as conn:
+        conn.cursor().execute(delete_search_query, [id])
+    return redirect(url_for("index"))
 
 @app.route("/about", methods=["POST", "GET"])
 def about():
@@ -381,10 +271,7 @@ def search_entry():
             conn.cursor().execute(f"""
                 INSERT INTO search (user_id, career_page, keywords, date_added) VALUES (?, ?, ?, ?)
             """, [session.get('user_id'), request.form.get('career_page'), request.form.get('keywords'), datetime.datetime.now().date()])
-        return render_template("signup_confirmation.html")
-    else:
-        print('fuck')
-        return redirect(url_for('/'))
+        return redirect(url_for("index"))
 
 @app.route("/user_account", methods=["POST", "GET"])
 def user_account():
