@@ -33,12 +33,12 @@ async def main():
 
     results = []
     page_searches = {
-        "http://google.com":[['1','the'], ['7','a']],
-        "http://linkedin.com":[['2','bla'], ['8','block']],
-        "http://apple.com":[['3','blab'], ['9','blab']],
-        "http://microsoft.com":[['4','thought'], ['10','thought']],
-        "http://facebook.com":[['5','face'], ['11','face']],
-        "http://twitter.com":[['6','hit'], ['12','log']],
+        "https://www.shopify.ca/careers/search?keywords=&sort=specialty_asc":[['1','the'], ['7','a']],
+        "https://jobs.lever.co/close.io/":[['2','bla'], ['8','block']],
+        "https://lixar.com/careers/":[['3','blab'], ['9','blab']],
+        "https://journey.buffer.com/#vacancies":[['4','thought'], ['10','thought']],
+        "https://www.shopify.ca/careers/search":[['5','face'], ['11','face']],
+        "https://www.klipfolio.com/careers":[['6','hit'], ['12','log']],
     }
     work_queue = asyncio.Queue()
     for url in page_searches:
