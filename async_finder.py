@@ -23,7 +23,9 @@ async def main():
                     content = await response.read()
                     soup = BeautifulSoup(str(content), "html.parser")
                     postings = {posting:await get_content(posting.get('href')) for posting in soup.find_all("a")}
+                    print(f"???{len(postings)}")
                     for search in page_search:
+                        print(f"searching for: {search}")
                         search_id = search[0]
                         keywords = search[1]
                         good_posting_links = {posting.get('href'): posting.get_text() for posting in postings if keywords in postings[posting].lower()}
