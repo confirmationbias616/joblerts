@@ -23,11 +23,11 @@
       </form>
     </div>
       {% if not search_table.empty %}
-      <hr style="border: 1px solid var(--highlight);">
+      <hr style="border: 1px solid var(--outline);">
       <br>
       <div class='blocktext'>
         {% for _, search in search_table.iterrows() %}
-        <a href="{{search.action}}">x</a>   {{ search.keywords }} - {{ search.career_page}}<br><br>
+        <a href="{{search.action}}"><i class="fa fa-times" style="color:var(--outline); margin-right:5px"></i></a>   {{ search.keywords }} - {{ search.career_page}}<br><br>
         {% endfor %}
       </div>
       {% endif %}
