@@ -23,8 +23,9 @@
       </form>
     </div>
       {% if not search_table.empty %}
+      <br><br>
       <hr style="border: 1px solid var(--highlight);">
-      <br>
+      <br><br>
       <div class='blocktext'>
         {% for _, search in search_table.iterrows() %}
         <a href="{{search.action}}">x</a>   {{ search.keywords }} - {{ search.career_page}}<br><br>
