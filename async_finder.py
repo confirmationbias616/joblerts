@@ -24,14 +24,14 @@ async def main(page_searches):
     async def task(work_queue):
         async with aiohttp.ClientSession() as session:
             while not work_queue.empty():
-                search_url = await work_queue.get()
-                page_search = page_searches[search_url]
-                parent_url = re.findall('.*/(?=.*)', search_url.rstrip('/'))[0]
+                url = await work_queue.get()
+                page_search = page_searches[url]
+                parent_url = re.findall('.*/(?=.*)', url.rstrip('/'))[0]
                 async with session.get(parent_url, headers={'User-Agent': 'Mozilla/5.0'}) as response:
                     parent_content = await response.read()
                 soup = BeautifulSoup(str(parent_content), "html.parser")
                 irrelevant_links = [a.get('href') for a in soup.find_all('a')]
-                async with session.get(search_url, headers={'User-Agent': 'Mozilla/5.0'}) as response:
+                async with session.get(url, headers={'User-Agent': 'Mozilla/5.0'}) as response:
                     content = await response.read()
                     soup = BeautifulSoup(str(content), "html.parser")
                     postings = {}
