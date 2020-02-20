@@ -10,15 +10,15 @@
     {% block body %}
     <br><br>    
     <div>
-      <h1 class='blocktext'>Get it straight from the source.</h1>
+      <h1 class='blocktext'>Get job alerts straight from the source.</h1>
     </div>
     <br>
     {% if session.get('user_name') %}
     <div class='blocktext'>
-      <span style="font-size: 115%;">Enter a career page url and search keyword below:</span><br><br>
+      <span style="font-size: 115%;">Enter a search keyword and target career page url below:</span><br><br>
       <form action="/search_entry" name = "search_entry" method="POST" onsubmit="return(validate())">
-        <input type="text" name="career_page" size="26" placeholder="https://www.SomeCoolCompany/careers/" required style="margin-bottom: 10px; margin-right: 10px;">
         <input type="text" name="keywords" size="26" placeholder="Data Scientist" required style="margin-bottom: 10px; margin-right: 10px;">
+        <input type="text" name="career_page" size="26" placeholder="www.DreamEmployer.com/careers/" required style="margin-bottom: 10px; margin-right: 10px;">
         <input type="submit" id="small_button" value="SUBMIT">
       </form>
     </div>
@@ -28,7 +28,7 @@
       <br><br>
       <div class='blocktext'>
         {% for _, search in search_table.iterrows() %}
-        <a href="{{search.action}}"><i class="fa fa-times" style="color:var(--outline); margin-right:5px"></i></a>   {{ search.keywords }} - {{ search.career_page}}<br><br>
+        <a href="{{search.action}}"><i class="fa fa-times" style="color:var(--outline); margin-right:5px"></i></a>   {{ search.keywords }} @ <a href="{{ search.career_page}}">{{ search.career_page}}</a><br><br>
         {% endfor %}
       </div>
       {% endif %}
