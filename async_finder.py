@@ -7,19 +7,19 @@ from utils import create_connection
 import datetime
 
 
+def get_valid_link(base_url, posting_url):
+    if '.' not in posting_url:
+        matching_url_location = [posting_param for posting_param in posting_url.split('/') if posting_param in base_url.split('/') and posting_param]
+        if matching_url_location:
+            url = base_url.split(matching_url_location[0])[0].rstrip('/') + '/' + posting_url.lstrip('/')
+        else:
+            url = re.findall('.*(?=/)', base_url)[0] + posting_url
+    else:
+        url = posting_url
+    return url
+
 async def main():
-    async def get_content(base_url, posting_url):
-        try:
-            if '.' not in posting_url:
-                matching_url_location = [posting_param for posting_param in posting_url.split('/') if posting_param in base_url.split('/') and posting_param]
-                if matching_url_location:
-                    url = base_url.split(matching_url_location[0])[0].rstrip('/') + '/' + posting_url.lstrip('/')
-                else:
-                    url = re.findall('.*(?=/)', base_url)[0] + posting_url
-            else:
-                url = posting_url
-        except IndexError:
-            import pdb; pdb.set_trace()
+    async def get_content(url):
         try:
             print(f'trying {url} ...')
             async with aiohttp.ClientSession() as session:
