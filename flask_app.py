@@ -125,6 +125,16 @@ def load_search_table(user_id):
         search_table = pd.read_sql(fetch_searches_query, conn, params=[user_id])    
     return search_table
 
+# function could be improved to find whichever candidate shows up most frequently within visible
+# text of base_url page. Make sure to use aiohttp to avoid blocking the event loop if this is
+# implemented!
+def get_company_name(base_url):
+    words = (re.findall('[^#$%&/.:]{3,}', base_url))
+    discard_words = ('career', 'careers', 'job', 'jobs', 'lever', 'www', 'http', 'https', 'gov', 'com')
+    candidates = [word for word in words if word not in discard_words]
+    company_name = candidates[0].title()
+    return company_name
+
 @app.route("/", methods=["POST", "GET"])
 def index():
     load_user()
@@ -269,8 +279,8 @@ def search_entry():
     if request.method == "POST":
         with create_connection() as conn:
             conn.cursor().execute(f"""
-                INSERT INTO search (user_id, career_page, keywords, date_added) VALUES (?, ?, ?, ?)
-            """, [session.get('user_id'), request.form.get('career_page'), request.form.get('keywords'), datetime.datetime.now().date()])
+                INSERT INTO search (user_id, career_page, company, keywords, date_added) VALUES (?, ?, ?, ?, ?)
+            """, [session.get('user_id'), request.form.get('career_page'), get_company_name(request.form.get('career_page')), request.form.get('keywords').title(), datetime.datetime.now().date()])
         return redirect(url_for("index"))
 
 @app.route("/user_account", methods=["POST", "GET"])
