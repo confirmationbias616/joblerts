@@ -28,7 +28,7 @@
       <br><br>
       <div class='blocktext'>
         {% for _, search in search_table.iterrows() %}
-        <a href="{{search.action}}"><i class="fa fa-times" style="color:var(--outline); margin-right:5px"></i></a>   {{ search.keywords }} @ <a href="{{ search.career_page}}">{{ search.career_page}}</a><br><br>
+        <a href="{{search.action}}"><i class="fa fa-times" style="color:var(--outline); margin-right:5px"></i></a>   {{ search.keywords }} @ <a href="{{ search.career_page}}">{{ search.company}}</a><br><br>
         {% endfor %}
       </div>
       {% endif %}
