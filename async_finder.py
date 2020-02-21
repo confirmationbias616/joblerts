@@ -48,11 +48,11 @@ async def main():
                         SELECT career_page FROM search
                         WHERE id = ?
                     """, [search_id]).fetchone()[0]
-                parent_url = re.findall('.*/(?=.*)', page_search.rstrip('/'))[0]
-                async with session.get(parent_url, headers={'User-Agent': 'Mozilla/5.0'}) as response:
-                    parent_content = await response.read()
-                soup = BeautifulSoup(str(parent_content), "html.parser")
-                irrelevant_links = [a.get('href') for a in soup.find_all('a')]
+                # parent_url = re.findall('.*/(?=.*)', page_search.rstrip('/'))[0]
+                # async with session.get(parent_url, headers={'User-Agent': 'Mozilla/5.0'}) as response:
+                #     parent_content = await response.read()
+                # soup = BeautifulSoup(str(parent_content), "html.parser")
+                # irrelevant_links = [a.get('href') for a in soup.find_all('a')]
                 async with session.get(page_search, headers={'User-Agent': 'Mozilla/5.0'}) as response:
                     content = await response.read()
                     soup = BeautifulSoup(str(content), "html.parser")
@@ -73,9 +73,9 @@ async def main():
                         if posting.get('href'):
                             if stale_links and posting.get('href') in stale_links:
                                 continue
-                            if posting.get('href') in irrelevant_links:
-                                continue
-                            posting_content = await get_content(page_search, posting.get('href'))
+                            # if posting.get('href') in irrelevant_links:
+                            #     continue
+                            posting_content = await get_content(get_valid_link(page_search, posting.get('href')))
                             if not posting_content:
                                 continue
                             posting_soup = BeautifulSoup(posting_content, 'html.parser')
