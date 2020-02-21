@@ -5,7 +5,7 @@ from bs4.element import Comment
 import re
 from utils import create_connection
 import datetime
-
+from sender import send_email
 
 def get_valid_link(base_url, posting_url):
     if '.' not in posting_url:
@@ -152,6 +152,7 @@ async def main():
         search_id = result[0]
         for posting in result[1]:
             print(f"{result[1][posting]}: {posting}")
+            send_email(search_id)
             with create_connection() as conn:
                 conn.cursor().execute("""
                     INSERT INTO found (search_id, link, title, date_found) VALUES (?, ?, ?, ?)
