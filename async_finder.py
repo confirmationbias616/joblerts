@@ -150,6 +150,8 @@ async def main():
                 """).fetchone()[0]
             if posting not in stale_links.split(' '):
                 send_email(found_id)
+            else:
+                print('posting was already in stale_links!')
 
 
 if __name__ == "__main__":
