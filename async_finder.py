@@ -143,7 +143,7 @@ async def main():
         for posting in result[1]:
             print(f"{result[1][posting]}: {posting}")
             with create_connection() as conn:
-                entry_date = conn.cursor().execute("""SELECT pub_date FROM search WHERE search_id = ?""", conn, [search_id])
+                entry_date = conn.cursor().execute("""SELECT pub_date FROM search WHERE search_id = ?""", [search_id])
             if entry_date and entry_date[0] != str(datetime.datetime.now().date()):
                 send_email(search_id)
             with create_connection() as conn:
