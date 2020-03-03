@@ -135,16 +135,20 @@ async def main():
 
     for result in results:
         search_id = result[0]
+        with create_connection() as conn:
+            stale_links = conn.cursor().execute("""
+                SELECT stale_links FROM search WHERE id = ?
+            """, [search_id]).fetchone()[0]
         for posting in result[1]:
             print(f"{result[1][posting]}: {posting}")
-            if search_id not in mature_search_ids:
-                with create_connection() as conn:
-                    conn.cursor().execute("""
-                        INSERT INTO found (search_id, link, title, date_found) VALUES (?, ?, ?, ?)
-                    """, [search_id, posting, result[1][posting], datetime.datetime.now().date()])
-                    found_id = conn.cursor().execute("""
-                        SELECT id FROM found ORDER BY id DESC LIMIT 1
-                    """).fetchone()[0]
+            with create_connection() as conn:
+                conn.cursor().execute("""
+                    INSERT INTO found (search_id, link, title, date_found) VALUES (?, ?, ?, ?)
+                """, [search_id, posting, result[1][posting], datetime.datetime.now().date()])
+                found_id = conn.cursor().execute("""
+                    SELECT id FROM found ORDER BY id DESC LIMIT 1
+                """).fetchone()[0]
+            if posting not in stale_links.split(' '):
                 send_email(found_id)
 
 
