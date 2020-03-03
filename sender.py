@@ -5,9 +5,8 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, From, To
 import json
 import argparse
-from utils import create_connection
+from utils import create_connection, get_valid_link
 import pandas as pd
-from async_finder import get_valid_link
 
 
 def send_email(found_id):
