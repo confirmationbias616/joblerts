@@ -102,9 +102,10 @@ async def main():
     
     with create_connection() as conn:
         search_ids = conn.cursor().execute("""
-            SELECT id FROM search
+            SELECT id, stale_links FROM search
         """).fetchall()
         search_ids = [x[0] for x in search_ids]
+        mature_search_ids = [x[0] for x in search_ids if x[1]]
     
     results = []
     
@@ -142,9 +143,7 @@ async def main():
         search_id = result[0]
         for posting in result[1]:
             print(f"{result[1][posting]}: {posting}")
-            with create_connection() as conn:
-                entry_date = conn.cursor().execute("""SELECT pub_date FROM search WHERE search_id = ?""", [search_id])
-            if entry_date and entry_date[0] != str(datetime.datetime.now().date()):
+            if search_id in mature_search_ids:
                 send_email(search_id)
             with create_connection() as conn:
                 conn.cursor().execute("""
