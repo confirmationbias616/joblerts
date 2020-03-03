@@ -53,6 +53,7 @@ async def main():
                                 UPDATE search SET stale_links = ?
                                 WHERE id = ?
                             """, [new_stale_links, search_id])
+                        return
                     postings = {}
                     for posting in filter(tag_visible, soup.find_all("a", text=True)):
                         if posting.get('href'):
