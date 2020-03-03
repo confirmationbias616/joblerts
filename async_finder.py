@@ -101,11 +101,11 @@ async def main():
                         results.append([search_id, matched_postings])
     
     with create_connection() as conn:
-        search_ids = conn.cursor().execute("""
+        search_info = conn.cursor().execute("""
             SELECT id, stale_links FROM search
         """).fetchall()
-        search_ids = [x[0] for x in search_ids]
-        mature_search_ids = [x[0] for x in search_ids if x[1]]
+        search_ids = [x[0] for x in search_info]
+        mature_search_ids = [x[0] for x in search_info if x[1]]
     
     results = []
     
