@@ -5,6 +5,7 @@ import json
 import sys
 import datetime
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 log_handler = logging.StreamHandler(sys.stdout)
