@@ -143,12 +143,15 @@ async def main():
         search_id = result[0]
         for posting in result[1]:
             print(f"{result[1][posting]}: {posting}")
-                send_email(search_id)
-            with create_connection() as conn:
-                conn.cursor().execute("""
-                    INSERT INTO found (search_id, link, title, date_found) VALUES (?, ?, ?, ?)
-                """, [search_id, posting, result[1][posting], datetime.datetime.now().date()])
             if search_id not in mature_search_ids:
+                with create_connection() as conn:
+                    conn.cursor().execute("""
+                        INSERT INTO found (search_id, link, title, date_found) VALUES (?, ?, ?, ?)
+                    """, [search_id, posting, result[1][posting], datetime.datetime.now().date()])
+                    found_id = conn.cursor().execute("""
+                        SELECT id FROM found ORDER BY id DESC LIMIT 1
+                    """).fetchone()[0]
+                send_email(found_id)
 
 
 if __name__ == "__main__":
