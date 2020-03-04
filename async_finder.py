@@ -72,7 +72,9 @@ async def main():
                     matched_postings = {}
                     for posting in postings:
                         print(f"Maybe {posting.get_text()}?")
-                        texts = postings[posting].find_all(text=True)
+                        raw_soup = postings[posting]
+                        soup_no_links = BeautifulSoup(re.sub('(?=<a)[\s\S]*(?<=</a>)', '', str(raw_soup)), 'html.parser')
+                        texts = soup_no_links.find_all(text=True)
                         visible_texts = filter(tag_visible, texts)
                         posting_text = " ".join(t.strip() for t in visible_texts)
                         if not keywords in posting_text.lower():
