@@ -96,10 +96,9 @@ async def main():
     
     with create_connection() as conn:
         search_info = conn.cursor().execute("""
-            SELECT id, stale_links FROM search
+            SELECT id FROM search
         """).fetchall()
         search_ids = [x[0] for x in search_info]
-        mature_search_ids = [x[0] for x in search_info if x[1]]
     
     results = []
     
