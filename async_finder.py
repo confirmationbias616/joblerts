@@ -57,7 +57,7 @@ async def main():
                     postings = {}
                     for posting in filter(tag_visible, soup.find_all("a", text=True)):
                         if posting.get('href'):
-                            if stale_links and posting.get('href') in stale_links:
+                            if stale_links and posting.get('href') in stale_links.split(' '):
                                 continue
                             posting_content = await get_content(get_valid_link(page_search, posting.get('href')))
                             if not posting_content:
