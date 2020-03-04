@@ -134,10 +134,6 @@ async def main():
 
     for result in results:
         search_id = result[0]
-        with create_connection() as conn:
-            stale_links = conn.cursor().execute("""
-                SELECT stale_links FROM search WHERE id = ?
-            """, [search_id]).fetchone()[0]
         for posting in result[1]:
             print(f"posting '{result[1][posting]}' is a valid match! logging and sending email...")
             with create_connection() as conn:
