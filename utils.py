@@ -6,6 +6,8 @@ import sys
 import datetime
 import logging
 import re
+import argparse
+
 
 logger = logging.getLogger(__name__)
 log_handler = logging.StreamHandler(sys.stdout)
@@ -94,4 +96,21 @@ def get_valid_link(base_url, posting_url):
     else:
         url = posting_url
     return url
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Call specific utility fucntion.')
+    parser.add_argument('--custom_query', type=str, help="""
+        Run custom SQL query against cert_db.sqlite3
+    """)
+    parser.add_argument('--update_test_csv_files',  action='store_true', help="""
+        Writes all tables of specified SQLite3 database to separate CSV files located in
+        `./test` subdirectory.
+    """)
+    args = parser.parse_args()
+    if args.custom_query:
+        custom_query(args.custom_query)
+    elif args.update_test_csv_files:
+        dbtables_to_csv(destination="./test")
+    else:
+        parser.error('No action requested, add argument according to --help')
 
