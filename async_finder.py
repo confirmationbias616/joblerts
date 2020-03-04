@@ -139,7 +139,7 @@ async def main():
                 SELECT stale_links FROM search WHERE id = ?
             """, [search_id]).fetchone()[0]
         for posting in result[1]:
-            print(f"{result[1][posting]}: {posting}")
+            print(f"posting '{result[1][posting]}' is a valid match! logging and sending email...")
             with create_connection() as conn:
                 conn.cursor().execute("""
                     INSERT INTO found (search_id, link, title, date_found) VALUES (?, ?, ?, ?)
