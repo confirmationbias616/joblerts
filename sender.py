@@ -17,6 +17,7 @@ def send_email(found_id):
                 users.email,
                 search.career_page,
                 search.company,
+                searc.keywords,
                 found.title,
                 found.link 
             FROM found
@@ -36,6 +37,8 @@ def send_email(found_id):
                 <br><br>
                 Looks like one of your target career pages (<a href='{found.career_page}'>{found.company}</a>)
                 recently posted a new job for <a href='{get_valid_link(found.career_page, found.link)}'>{found.title}</a>.
+                <br><br>
+                This matches your search for keyword "{found.keywords}".
                 <br><br>
                 Good luck!<br>
                 <a href='www.joblert.me'>joblert.me</a>
