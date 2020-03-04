@@ -47,7 +47,7 @@ async def main():
                             SELECT stale_links FROM search
                             WHERE id = ?
                         """, [search_id]).fetchone()[0]
-                    if not stale_links or (set(new_stale_links.split(' ')) != set(stale_links.split(' '))):
+                    if not stale_links:
                         with create_connection() as conn:
                             conn.cursor().execute("""
                                 UPDATE search SET stale_links = ?
@@ -93,6 +93,12 @@ async def main():
                     if matched_postings:
                         print(f"WOOH OOOO: {matched_postings}")
                         results.append([search_id, matched_postings])
+                    if set(new_stale_links.split(' ')) != set(stale_links.split(' ')):
+                        with create_connection() as conn:
+                            conn.cursor().execute("""
+                                UPDATE search SET stale_links=?
+                                WHERE id=?
+                            """, [new_stale_links, search_id])
     
     with create_connection() as conn:
         search_info = conn.cursor().execute("""
