@@ -147,10 +147,7 @@ async def main():
                 found_id = conn.cursor().execute("""
                     SELECT id FROM found ORDER BY id DESC LIMIT 1
                 """).fetchone()[0]
-            if posting not in stale_links.split(' '):
-                send_email(found_id)
-            else:
-                print('posting was already in stale_links!')
+            send_email(found_id)
 
 
 if __name__ == "__main__":
