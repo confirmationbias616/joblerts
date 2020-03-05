@@ -11,12 +11,9 @@ def process_user_search(keywords):
     keyword_list = []
     or_options = re.findall('(?=\().*(?<=\))', keywords)
     or_options = [or_option for or_option in or_options if 'OR' in or_option]
-    print(or_options)
     if not or_options:
         or_options = [keywords]
-    print(or_options)
     for option in or_options:
-        print(option)
         for term in option.lstrip('(').rstrip(')').split('OR'):
             keyword_list.append(keywords.replace(option,term.strip(' ').lstrip('(').rstrip(')')))
     keyword_list = [re.sub(' +',' ',k).lower() for k in keyword_list]
