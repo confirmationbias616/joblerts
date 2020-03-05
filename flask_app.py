@@ -23,6 +23,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 from user import User
 from functools import lru_cache
+from async_finder import process_user_search
 
 logger = logging.getLogger(__name__)
 log_handler = logging.StreamHandler(sys.stdout)
@@ -140,6 +141,7 @@ def index():
     load_user()
     search_table = load_search_table(session['user_id'])
     if len(search_table):
+        search_table['list_keywords'] = search_table.keywords.apply(lambda x: (', '.join(process_user_search(x)).title()))
         search_table["action"] = search_table.apply(
             lambda row: (
                 f"{url_for('delete_search', id=row.id)}"
