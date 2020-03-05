@@ -17,7 +17,7 @@ def send_email(found_id):
                 users.email,
                 search.career_page,
                 search.company,
-                searc.keywords,
+                search.keywords,
                 found.title,
                 found.link 
             FROM found
