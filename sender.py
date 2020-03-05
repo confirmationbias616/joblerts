@@ -38,12 +38,13 @@ def send_email(found_id):
                 Looks like one of your target career pages (<a href='{found.career_page}'>{found.company}</a>)
                 recently posted a new job for <a href='{get_valid_link(found.career_page, found.link)}'>{found.title}</a>.
                 <br><br>
-                This matches your search for keyword "{found.keywords}".
+                This matches your search for keyword <b>{found.keywords}</b>.
                 <br><br>
                 Good luck!<br>
                 <a href='www.joblert.me'>joblert.me</a>
             </body>
-        """)
+        """
+    )
     message.from_email = From('notifications@joblert.me', 'joblert.me')
     print(found.user_name)
     message.to_email = To(found.email, found.user_name)
