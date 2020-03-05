@@ -280,7 +280,7 @@ def search_entry():
         with create_connection() as conn:
             conn.cursor().execute(f"""
                 INSERT INTO search (user_id, career_page, company, keywords, date_added) VALUES (?, ?, ?, ?, ?)
-            """, [session.get('user_id'), request.form.get('career_page'), get_company_name(request.form.get('career_page')), request.form.get('keywords').title(), datetime.datetime.now().date()])
+            """, [session.get('user_id'), request.form.get('career_page'), get_company_name(request.form.get('career_page')), request.form.get('keywords'), datetime.datetime.now().date()])
         return redirect(url_for("index"))
 
 @app.route("/user_account", methods=["POST", "GET"])

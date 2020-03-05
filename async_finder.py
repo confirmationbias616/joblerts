@@ -7,6 +7,20 @@ from utils import create_connection, get_valid_link
 import datetime
 from sender import send_email
 
+def process_user_search(keywords):
+    keyword_list = []
+    or_options = re.findall('(?=\().*(?<=\))', keywords)
+    or_options = [or_option for or_option in or_options if 'OR' in or_option]
+    print(or_options)
+    if not or_options:
+        or_options = [keywords]
+    print(or_options)
+    for option in or_options:
+        print(option)
+        for term in option.lstrip('(').rstrip(')').split('OR'):
+            keyword_list.append(keywords.replace(option,term.strip(' ').lstrip('(').rstrip(')')))
+    keyword_list = [re.sub(' +',' ',k).lower() for k in keyword_list]
+    return keyword_list
 
 async def main():
     async def get_content(url):
@@ -68,7 +82,7 @@ async def main():
                         keywords = conn.cursor().execute("""
                             SELECT keywords FROM search
                             WHERE id = ?
-                        """, [search_id]).fetchone()[0].lower()
+                        """, [search_id]).fetchone()[0]
                     matched_postings = {}
                     for posting in postings:
                         print(f"Maybe {posting.get_text()}?")
@@ -77,7 +91,11 @@ async def main():
                         texts = soup_no_links.find_all(text=True)
                         visible_texts = filter(tag_visible, texts)
                         posting_text = " ".join(t.strip() for t in visible_texts)
-                        if not keywords in posting_text.lower():
+                        keyword_matches = []
+                        for keyword in keywords:
+                            if keyword in posting_text.lower():
+                                keyword_matches.append(keyword)  #this variable is not used downstream (for now!)
+                        if not keyword_matches:
                             print(f"Nope, didn't contain keyword {keywords}")
                             continue
                         posting_sentences = re.findall("([A-Z][^.]{60,}[\.!?])", posting_text)
