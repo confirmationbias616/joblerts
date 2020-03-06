@@ -9,15 +9,23 @@ from sender import send_email
 
 def process_user_search(keywords):
     keyword_list = []
-    or_options = re.findall('(?=\().*(?<=\))', keywords)
-    or_options = [or_option for or_option in or_options if 'OR' in or_option]
+    master_keyword_list = []
+    or_options = re.findall('(?=\().*?OR.*?(?<=\))', keywords)
     if not or_options:
         or_options = [keywords]
     for option in or_options:
         for term in option.lstrip('(').rstrip(')').split('OR'):
             keyword_list.append(keywords.replace(option,term.strip(' ').lstrip('(').rstrip(')')))
-    keyword_list = [re.sub(' +',' ',k).lower() for k in keyword_list]
-    return keyword_list
+    if 'OR' in ' '.join(keyword_list):
+        for phrase in keyword_list:
+            a = process_user_search(phrase)
+            for b in a:
+                master_keyword_list.append(b)
+    else:
+        for keyword in keyword_list:
+            master_keyword_list.append(keyword)
+    master_keyword_list = [re.sub(' +',' ',k).strip(' ') for k in master_keyword_list]
+    return list(set(master_keyword_list))
 
 async def main():
     async def get_content(url):
