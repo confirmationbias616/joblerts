@@ -15,7 +15,7 @@
     <br>
     {% if session.get('user_name') %}
     <div class='blocktext'>
-      <span style="font-size: 115%;">Enter a search keyword and target career page url below:</span><br><br>
+      <span style="font-size: 115%;">Enter a search keywords and target career page url below:</span><br><br>
       <form action="/search_entry" name = "search_entry" method="POST" onsubmit="return(validate())">
         <input type="text" name="keywords" size="26" placeholder="Data Scientist" required style="margin-bottom: 10px; margin-right: 10px;">
         <input type="text" name="career_page" size="26" placeholder="www.DreamEmployer.com/careers/" required style="margin-bottom: 10px; margin-right: 10px;">
