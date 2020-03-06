@@ -9,16 +9,89 @@
 <body>
     {% block body %}
     <br><br>    
-    <div>
-        <P class="blocktext">
-            Du bla-bla.
-        </P>
-        <br>
-        <P class="blocktext">
-            Enocre plus de bla-bla-bla...
-        </P>
+    <div class='blocktext'>
+        <div id='tech_stach'>
+            <br>
+            <P>
+                You want notifications for specific job postings popping up on your favourite
+                companies' career pages.<br><br>
+                But you want to avoid the clunky mess of dealing with job search engines.
+                <br><br>
+                You also don't have the time or discipline to manually check all those career
+                pages.<br><br>
+                joblert.me service solves these pain points by automating this process for you.
+                This is acheived by searching all your listed career pages every hour and checking
+                to see if any new postings are a match with your custom queries.<br><br>
+                Simple yet effective.
+            </P>
+        </div>
+        <div id='tech_stach'>
+            <br>
+            <h3>
+                Tech Stack
+            </h3>
+            <P>
+                <ul><li>Python</li></ul>
+                    <ul><ul><li>Flask</li></ul></ul>
+                    <ul><ul><li>Pandas</li></ul></ul>
+                    <ul><ul><li>BeautifulSoup</li></ul></ul>
+                    <ul><ul><li>Asyncio / aiohttp</li></ul></ul>
+                <ul><li>SQLite3</li></ul>
+                <ul><li>SendGrid</li></ul>
+                <ul><li>HTML/CSS</li></ul>
+                <ul><li>Git</li></ul>
+                <ul><li>CircleCI</li></ul>
+            </P>
+        </div>
+        <br><br>
+        <br><br>
+        <div id='power-user'>
+            <br>
+            <h3>
+                How To: Write More Advanced Queries
+            </h3>
+            <br>
+            <P>
+                By default, keyword entries are separated by spaces. The query will only pull
+                up job postings containing all of the keywords although they don't
+                nescessarily need to be side-by-side in the posting's text.<br>
+                <br>
+                <b>User-defined search phrase</b> 
+                <blockquote><mark>Data Scientist</mark></blockquote>
+                <b>Resulting query</b>
+                <blockquote>successful posting will need to contain <mark>Data</mark> <i>and</i> <mark>Scientist</mark></blockquote>
+                <br><br>
+                <hr width=80% style='border: 1px solid black'>
+                <br><br>
+                Using parantheses in conjunction with special keyword will create alternate queries. If any of the queries matches, the posting will be sent.<br><br><br>
+                <b>User-defined search phrase</b> 
+                <blockquote><mark>SQL (Python OR R)</mark></blockquote>
+                <b>Resulting queries</b>
+                <blockquote>successful posting will need to contain <mark>SQL</mark> <i>and</i> <i>either</i> <mark>Python</mark> <i>or</i> <mark>R</mark></blockquote>
+                <br><br>
+                <hr width=80% style='border: 1px solid black'>
+                <br><br>
+                Using single quotes <mark>''</mark> will only return postings that contain the exact string match within the single quotes.<br><br><br>
+                <b>User-defined search phrase</b> 
+                <blockquote><mark>'Data (Scientist OR Analyst)'</mark></blockquote>
+                <b>Resulting queries</b>
+                <blockquote>successful posting will need to contain either <mark>Data Scientist</mark> <i>or</i> <mark>Data Scientist</mark></blockquote>
+                <br><br>
+            </P>
+        </div>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
+        <br><br>
     </div>
-    <br><br>
     {% endblock %}
 </body>
 </html>

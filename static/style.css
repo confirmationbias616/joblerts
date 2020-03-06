@@ -291,3 +291,7 @@
       background: url("https://thumbs.gfycat.com/ShadowyThornyGelada-size_restricted.gif") no-repeat;
       cursor: wait;
     }
+    mark {
+      background-color: white; 
+      color: black;
+    }
