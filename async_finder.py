@@ -84,10 +84,11 @@ async def main():
                             posting_soup = BeautifulSoup(posting_content, 'html.parser')
                             postings.update({posting:posting_soup})
                     with create_connection() as conn:
-                        keywords = conn.cursor().execute("""
+                        keywords_query = conn.cursor().execute("""
                             SELECT keywords FROM search
                             WHERE id = ?
                         """, [search_id]).fetchone()[0]
+                    keywords = process_user_search(keywords_query)
                     matched_postings = {}
                     for posting in postings:
                         print(f"Maybe {posting.get_text()}?")
