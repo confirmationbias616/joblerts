@@ -24,7 +24,7 @@ def process_user_search(keywords):
     else:
         for keyword in keyword_list:
             master_keyword_list.append(keyword)
-    master_keyword_list = [re.sub(' +',' ',k).strip(' ') for k in master_keyword_list]
+    master_keyword_list = [re.sub(' +',' ',k).strip(' ').lower() for k in master_keyword_list]
     return list(set(master_keyword_list))
 
 async def main():
