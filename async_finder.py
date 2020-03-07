@@ -102,7 +102,7 @@ async def main():
                             if keyword in posting_text.lower():
                                 keyword_matches.append(keyword)  #this variable is not used downstream (for now!)
                         if not keyword_matches:
-                            print(f"Nope, didn't contain keyword {keywords}")
+                            print(f"Nope, didn't contain match any keyword phrases ({keywords})")
                             continue
                         posting_sentences = re.findall("([A-Z][^.]{60,}[\.!?])", posting_text)
                         if len(posting_sentences) <= 10:
