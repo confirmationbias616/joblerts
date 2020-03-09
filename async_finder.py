@@ -93,7 +93,7 @@ async def main():
                     for posting in postings:
                         print(f"Maybe {posting.get_text()}?")
                         raw_soup = postings[posting]
-                        soup_no_links = BeautifulSoup(re.sub('(?=<a)[\s\S]*(?<=</a>)', '', str(raw_soup)), 'html.parser')
+                        soup_no_links = BeautifulSoup(re.sub('(?=<a)[\s\S]*?(?<=</a>)', '', str(raw_soup)), 'html.parser')
                         texts = soup_no_links.find_all(text=True)
                         visible_texts = filter(tag_visible, texts)
                         posting_text = " ".join(t.strip() for t in visible_texts)
