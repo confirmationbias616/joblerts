@@ -112,7 +112,7 @@ async def main():
                         for career_term in ('responsibilities', 'full-time', 'salary', 'posting', 'equal opportunity', 'full time', 'part-time', 'part time'):
                             if career_term in posting_text.lower():
                                 matched_postings.update({posting.get('href'): posting.get_text()})
-                                print(f"Yes, it's a match for {posting.get_text()}! -> contains {len(posting_sentences)} sentences and career term `{career_term}`")
+                                print(f"Yes, it's a match for {posting.get_text()}! -> contains {len(posting_sentences)} sentences, keyword `{keyword_matches}` and career term `{career_term}`")
                                 break
                         else:
                             print(f"Nope, didn't contain a career term")
