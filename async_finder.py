@@ -74,7 +74,7 @@ async def main():
                             """, [new_stale_links, search_id])
                         return
                     postings = {}
-                    for posting in filter(tag_visible, soup.find_all("a", text=True)):
+                    for posting in filter(tag_visible, soup.find_all("a")):
                         if posting.get('href'):
                             if stale_links and posting.get('href') in stale_links.split(' '):
                                 continue
