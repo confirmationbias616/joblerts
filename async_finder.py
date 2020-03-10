@@ -104,8 +104,8 @@ async def main():
                         if not keyword_matches:
                             print(f"Nope, didn't contain match any keyword phrases ({keywords})")
                             continue
-                        posting_sentences = re.findall("([A-Z][^.]{60,}[\.!?])", posting_text)
                         if len(posting_sentences) <= 10:
+                        posting_sentences = re.findall("([A-Z][^.]{60,}?[\.!?])", posting_text)
                             print(f"Nope, didn't contain enough sentences ({len(posting_sentences)})")
                             print(posting)
                             continue
